@@ -247,6 +247,7 @@ def read_meta_data(list_of_contents, filename, sessh_data):
             pdf_contents, sections = read_pdf_file(
                 list_of_contents, filename)
 
+            print(pdf_contents)
             sessh_data.update({"pdf_content":pdf_contents})
             sessh_data.update({"sections":sections})
             sessh_data.update({"filename":filename})
@@ -278,6 +279,7 @@ def summarize_data(section, n_clicks_gen, system_prompt, sessh_data):
         if section is None or sections is None or len(section) == 0 or len(sections) == 0:
             return no_update
         
+        print(section)
         first_split = section[0]
         content = sessh_data['pdf_content']
         next_index = sections.index(first_split) + 1
@@ -296,10 +298,10 @@ def summarize_data(section, n_clicks_gen, system_prompt, sessh_data):
         summary_section = sessh_data['summary_section']
         file_name = f'{sessh_data["filename"]}{"_"}{summary_section}' 
 
-        # print("================")
-        # print("system prompt is", system_prompt)
-        # print(user_input)
-        # print(summary_section)
+        print("================")
+        print("system prompt is", system_prompt)
+        print(user_input)
+        print(summary_section)
 
         ##### GPT code goes here ######
 
