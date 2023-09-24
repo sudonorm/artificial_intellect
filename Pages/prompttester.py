@@ -280,7 +280,7 @@ def summarize_data(section, n_clicks_gen, system_prompt, sessh_data):
             return no_update
         
         print(section)
-        first_split = section[0]
+        first_split = section#[0]
         content = sessh_data['pdf_content']
         next_index = sections.index(first_split) + 1
         user_input = content.split(first_split)[1].split(sections[next_index])[0]
