@@ -22,7 +22,7 @@ home_dir = (os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.append(home_dir)
 from utils.components.app_components import AppComponents
 from utils.headers_getter import Headers
-from utils import folderPaths
+# from utils import folderPaths
 
 import dash_uploader as du
 from dash_uploader import callback as du_callback
