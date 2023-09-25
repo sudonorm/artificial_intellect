@@ -306,9 +306,9 @@ def summarize_data(section, n_clicks_gen, system_prompt, sessh_data):
         print(summary_section)
 
         ##### GPT code goes here ######
-        train_model = True
-        list_of_training_texts = 
-        list_of_summary_texts = 
+        train_model = False
+        list_of_training_texts = []
+        list_of_summary_texts = []
 
         if train_model is True:
             model = model_training(paper = list_of_training_texts, summary = list_of_summary_texts)
