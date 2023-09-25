@@ -56,9 +56,9 @@ class model_training:
         model = LinearRegression()
         model.fit(X, y)
         # Save model and vectorizer to disk
-        with open('model.pkl', 'wb') as f:
+        with open('./utils/components/model.pkl', 'wb') as f:
             pickle.dump(model, f)
-        with open('vectorizer.pkl', 'wb') as f:
+        with open('./utils/components/vectorizer.pkl', 'wb') as f:
             pickle.dump(vectorizer, f)
         return model, vectorizer
 
@@ -75,18 +75,18 @@ class summary_maker:
         # Check if model and vectorizer exist in disk
         if os.path.exists('model.pkl') and os.path.exists('vectorizer.pkl'):
             print("Opening Saved Models....")
-            with open('model.pkl', 'rb') as f:
+            with open('./utils/components/model.pkl', 'rb') as f:
                 self.model = pickle.load(f)
-            with open('vectorizer.pkl', 'rb') as f:
+            with open('./utils/components/vectorizer.pkl', 'rb') as f:
                 self.vectorizer = pickle.load(f)
         else:
             print("Modelling.....")
             self.model_trainer = model_training(paper, summary)
             self.model, self.vectorizer = self.model_trainer.train_model()
             # Save model and vectorizer to disk
-            with open('model.pkl', 'wb') as f:
+            with open('./utils/components/model.pkl', 'wb') as f:
                 pickle.dump(self.model, f)
-            with open('vectorizer.pkl', 'wb') as f:
+            with open('./utils/components/vectorizer.pkl', 'wb') as f:
                 pickle.dump(self.vectorizer, f)
         
     def generate_summary(self,llm_type:str = "gpt-3.5-turbo",n:int = 200):
