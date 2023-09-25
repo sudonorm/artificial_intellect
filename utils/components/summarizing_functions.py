@@ -73,7 +73,7 @@ class summary_maker:
         self.prompt_input = prompt_input
 
         # Check if model and vectorizer exist in disk
-        if os.path.exists('model.pkl') and os.path.exists('vectorizer.pkl'):
+        if os.path.exists('./utils/components/model.pkl') and os.path.exists('./utils/components/vectorizer.pkl'):
             print("Opening Saved Models....")
             with open('./utils/components/model.pkl', 'rb') as f:
                 self.model = pickle.load(f)
