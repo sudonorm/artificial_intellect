@@ -307,13 +307,13 @@ def summarize_data(section, n_clicks_gen, system_prompt, sessh_data):
 
         ##### GPT code goes here ######
         train_model = True
+        list_of_training_texts = 
+        list_of_summary_texts = 
 
         if train_model is True:
-            list_of_training_texts = 
-            list_of_summary_texts = 
             model = model_training(paper = list_of_training_texts, summary = list_of_summary_texts)
                 
-        maker = summary_maker(paper = list_of_training_texts, summary = list_of_summary_texts, text = text, prompt_input = prompt_start)
+        maker = summary_maker(paper = list_of_training_texts, summary = list_of_summary_texts, text = summary_section, prompt_input = system_prompt)
         gpt_response = maker.generate_summary(n = 100)
 
         ##### End GPT code goes here ######
