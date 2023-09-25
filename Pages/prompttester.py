@@ -24,6 +24,8 @@ from utils.components.app_components import AppComponents
 from utils.headers_getter import Headers
 # from utils import folderPaths
 
+from utils.components.summarizing_functions import * #Summarizing functions
+
 import dash_uploader as du
 from dash_uploader import callback as du_callback
 import uuid
@@ -304,9 +306,15 @@ def summarize_data(section, n_clicks_gen, system_prompt, sessh_data):
         print(summary_section)
 
         ##### GPT code goes here ######
+        train_model = True
 
-
-        gpt_response = "Here's a nice summary of your input text"
+        if train_model is True:
+            list_of_training_texts = 
+            list_of_summary_texts = 
+            model = model_training(paper = list_of_training_texts, summary = list_of_summary_texts)
+                
+        maker = summary_maker(paper = list_of_training_texts, summary = list_of_summary_texts, text = text, prompt_input = prompt_start)
+        gpt_response = maker.generate_summary(n = 100)
 
         ##### End GPT code goes here ######
 
