@@ -14,45 +14,6 @@ import os
 openai.api_key = "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"
 
 # Functions
-class pdf_importer:
-    def __init__(self ,pdf_file):
-        self.pdf_file = pdf_file
-
-    def import_text_from_pdf(self):
-        # Open the PDF file
-        doc = fitz.open(self.pdf_file)
-        text_boxes = []
-
-        # Iterate over the pages
-        for page_num in range(doc.page_count):
-            page = doc.load_page(page_num)
-
-            # Perform layout analysis
-            blocks = page.get_text("blocks")
-
-            # Iterate over the text blocks
-            for block in blocks:
-                text = block[4]  # Get the text from the block
-
-                # Check if the block is a table or figure
-                if block[3] == 0 and block[5] == 0:
-                    continue
-
-                # Add the text to the list
-                text_boxes.append(text.replace("\n", '').replace("  ",' '))
-
-        combined_text = " ".join(text_boxes)
-        # Split the combined_text into a list of words
-        word_list = combined_text.split()
-
-        # Create a single list of all the text
-        text_list = []
-        text_list.extend(word_list)
-
-        combined_text = ' '.join(text_list)
-
-        return combined_text
-
 class model_training:
     def __init__(self ,paper:list, summary:list):
         self.papers = paper
