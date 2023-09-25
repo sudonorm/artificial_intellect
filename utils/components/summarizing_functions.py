@@ -11,7 +11,7 @@ import pickle
 import os
 
 # Set up the OpenAI API key
-openai.api_key = "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"
+openai.api_key = "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"
 
 # Functions
 class model_training:
