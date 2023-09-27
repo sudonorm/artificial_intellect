@@ -1,0 +1,130 @@
+def import_text_from_pdf(pdf_file):
+    # Open the PDF file
+    doc = fitz.open(pdf_file)
+    text_boxes = []
+
+    # Iterate over the pages
+    for page_num in range(doc.page_count):
+        page = doc.load_page(page_num)
+
+        # Perform layout analysis
+        blocks = page.get_text("blocks")
+
+        # Iterate over the text blocks
+        for block in blocks:
+            text = block[4]  # Get the text from the block
+
+            # Check if the block is a table or figure
+            if block[3] == 0 and block[5] == 0:
+                continue
+
+            # Add the text to the list
+            text_boxes.append(text.replace("\n", '').replace("  ",' '))
+
+    combined_text = " ".join(text_boxes)
+    # Split the combined_text into a list of words
+    word_list = combined_text.split()
+
+    # Create a single list of all the text
+    text_list = []
+    text_list.extend(word_list)
+
+    combined_text = ' '.join(text_list)
+
+    return combined_text
+
+def train_model(papers:list, summaries:list):
+    """This function takes as input a list of medical research papers and their corresponding summaries, 
+    and trains a machine learning model to predict the importance of each sentence in the papers and summaries. 
+    The function tokenizes the papers and summaries into sentences, removes stop words and punctuation, computes the TF-IDF matrix for the sentences, 
+    and trains a linear regression model to predict the importance of each sentence.
+
+    Args:
+        papers (_type_): lists of strings.
+        summaries (_type_): lists of strings.
+
+    Returns:
+        _type_: trained model and TF-IDF vectorizer is a text vectorizer that transforms the text into a 
+        usable vector by computing the Term Frequency-Inverse Document Frequency (TF-IDF) matrix for the sentences, 
+        which is a weight assigned to each word in a document based on its term frequency (TF) and the inverse document frequency (IDF).
+    """
+    # Tokenize the papers and summaries into sentences
+    sentences = []
+
+    for paper, summary in zip(papers, summaries):
+        paper_sentences = sent_tokenize(paper)
+        summary_sentences = sent_tokenize(summary)
+        sentences.extend(paper_sentences)
+        sentences.extend(summary_sentences)
+    
+    # Remove stop words and punctuation
+    stop_words = set(stopwords.words('english'))
+    sentences = [' '.join([word for word in word_tokenize(sentence.lower()) if word.isalnum() and word not in stop_words]) for sentence in sentences]
+    #print(sentences)
+    # Compute the TF-IDF matrix for the sentences
+    vectorizer = TfidfVectorizer()
+    X = vectorizer.fit_transform(sentences)
+    
+    # Train a linear regression model to predict the importance of each sentence
+    y = [i for i in range(len(sentences))]
+    model = LinearRegression()
+    model.fit(X, y)
+    
+    return model, vectorizer
+
+def summarize(model, vectorizer, text, n:int):
+    """This function takes as input a trained machine learning model, a TF-IDF vectorizer, a new medical research paper, and the desired number of sentences in the summary. 
+    The function tokenizes the text into sentences, removes stop words and punctuation, computes the TF-IDF matrix for the sentences, ranks the sentences based on their predicted importance, 
+    and selects the top N sentences to form the summary.
+
+    Args:
+        model (_type_): trained model
+        vectorizer (_type_): a TF-IDF vectorizer
+        text (_type_): out-of-sample code
+        n (int): argument should be an integer representing the desired number of sentences in the summary.
+    """
+    
+        # Tokenize the text into sentences
+    sentences = sent_tokenize(text)
+    
+    # Remove stop words and punctuation
+    stop_words = set(stopwords.words('english'))
+    sentences = [' '.join([word for word in word_tokenize(sentence.lower()) if word.isalnum() and word not in stop_words]) for sentence in sentences]
+    
+    # Compute the TF-IDF matrix for the sentences
+    X = vectorizer.transform(sentences)
+    
+    # Rank the sentences based on their predicted importance and select the top N sentences to form the summary
+    scores = model.predict(X)
+    top_n = sorted(range(len(sentences)), key=lambda i: scores[i], reverse=True)[:n]
+    summary = [sentences[i] for i in top_n]
+    print(summary)
+    return ' '.join(summary)
+
+def generate_summary(prompt:str, model):
+    """This function takes as input a prompt and a machine learning model, and uses the OpenAI API to generate a summary of the text. 
+    The prompt includes the new medical research paper and the previous summaries as context for the model.
+
+    Args:
+        prompt (str): string 
+        model (output): is a trained machine learning model that is used to generate the summary of the text.
+
+    Returns:
+        _type_: new summary
+    """
+
+    # Generate a summary using the ChatGPT API
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": prompt}
+        ],
+        max_tokens=1050,
+        n=1,
+        stop=None,
+        temperature=0.5,
+    )
+    #summary = response.choices[0].text.strip()
+    summary = response['choices'][0]['message']['content']
+    return summary
